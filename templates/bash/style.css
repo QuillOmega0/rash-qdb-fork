@@ -140,10 +140,10 @@ input#admin_login_submit-button{
 
 /* site_nav_*: navigation on the top, for everyone */
 
-div#site_nav_lower{
+div.site_nav_lower{
 	background-color: #f0f0f0;
 }
-div#site_nav_lower_linkbar{
+div.site_nav_lower_linkbar{
 	clear: both;
 	text-align: right;
 }

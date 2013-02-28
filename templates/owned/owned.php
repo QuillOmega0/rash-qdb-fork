@@ -5,13 +5,15 @@ class OwnedTemplate extends BaseTemplate {
 function printheader($title, $topleft='Owned', $topright='Quote Database')
 {
     $this->set_menu_join_str(' / ');
+header('Content-type: text/html; charset=utf-8');
 ob_start();
 // begin editing after this line ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
  <title><?=$title?></title>
  <meta name="robots" content="noarchive,nofollow" />
+ <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
  <link rel="icon" type="image/png" href="./templates/owned/favicon.png">
  <link rel="alternate" type="application/rss+xml" href="?rss" title="RSS">
  <style type="text/css" media="all">

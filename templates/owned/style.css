@@ -107,11 +107,11 @@ form {
   padding-left: 1em;
 }
 
-#site_nav_lower {
+.site_nav_lower {
   text-align: right;
 }
 
-#site_nav_lower_linkbar {
+.site_nav_lower_linkbar {
   text-transform:lowercase;
 }
 

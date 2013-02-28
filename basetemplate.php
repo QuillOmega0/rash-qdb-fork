@@ -6,7 +6,7 @@ abstract class BaseTemplate {
     private $mainmenu = array();
     private $adminmenu = array();
     private $menu_join_str = ' | ';
-    private $menu_wrap_str = '<div id="site_nav_lower"><div id="site_nav_lower_linkbar">%s</div></div>';
+    private $menu_wrap_str = '<div class="site_nav_lower"><div class="site_nav_lower_linkbar">%s</div></div>';
 
     function __constructor()
     {

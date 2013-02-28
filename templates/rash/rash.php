@@ -8,13 +8,15 @@ class RashTemplate extends BaseTemplate {
 function printheader($title, $topleft='QMS', $topright='Quote Management System')
 {
 ob_start();
+header('Content-type: text/html; charset=utf-8');
 // begin editing after this line ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
  <title><?=$title?></title>
  <link rel="alternate" type="text/xml" title="RSS" href="?rss" />
  <meta name="robots" content="noarchive,nofollow" />
+ <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
  <style type="text/css" media="all">
   @import "./templates/rash/style.css";
  </style>
