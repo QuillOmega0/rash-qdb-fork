@@ -346,7 +346,7 @@ function quote_queue_page($innerhtml)
 
     $str .= $this->get_messages();
 
-    $str .= '  <form action="?'.urlargs('queue','judgement').'" method="post">
+    $str .= '  <form action="?'.urlargs('adminqueue','judgement').'" method="post">
    <table width="100%" cellspacing="0" class="admin_queue">';
 
     $str .= $innerhtml;

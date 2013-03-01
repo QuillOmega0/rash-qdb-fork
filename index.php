@@ -101,7 +101,7 @@ if (isset($CONFIG['login_required']) && ($CONFIG['login_required'] == 1)) {
 if (isset($_SESSION['logged_in'])) {
     $adminmenu = array();
     if ($_SESSION['level'] < USER_NORMAL) {
-	$adminmenu[] = array('url' => '?queue', 'id' => 'site_admin_nav_queue', 'txt' => 'menu_queue');
+	$adminmenu[] = array('url' => '?adminqueue', 'id' => 'site_admin_nav_queue', 'txt' => 'menu_adminqueue');
 	$adminmenu[] = array('url' => '?flag_queue', 'id' => 'site_admin_nav_flagged', 'txt' => 'menu_flagged');
     }
     if ($_SESSION['level'] <= USER_ADMIN) {
@@ -979,10 +979,12 @@ switch($page[0])
 	case 'logout':
 	    set_user_logout();
 	    break;
-	case 'queue':
+	case 'adminqueue':
 	    if (isset($_SESSION['logged_in']) && ($_SESSION['level'] < USER_NORMAL))
 		quote_queue($page[1]);
-	    else if (isset($CONFIG['public_queue']) && ($CONFIG['public_queue'] == 1)) {
+	    break;
+	case 'queue':
+	    if (isset($CONFIG['public_queue']) && ($CONFIG['public_queue'] == 1)) {
 		$query = "SELECT * FROM ".db_tablename('quotes')." WHERE queue=1 ORDER BY rand() LIMIT ".$limit;
 		quote_generation($query, lang('quote_queue_title'), -1);
 	    }

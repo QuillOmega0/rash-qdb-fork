@@ -480,7 +480,7 @@ abstract class BaseTemplate {
     {
 	$str = '<h1 id="admin_queue_title">'.lang('quote_queue_admin_title').'</h1>';
 
-	$str .= '  <form action="?'.urlargs('queue','judgement').'" method="post">
+	$str .= '  <form action="?'.urlargs('adminqueue','judgement').'" method="post">
    <table width="100%" cellspacing="0" class="admin_queue">';
 
 	$str .= $innerhtml;

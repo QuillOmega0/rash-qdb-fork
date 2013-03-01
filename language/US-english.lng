@@ -60,6 +60,7 @@ $lang = array (
 'unflagged_all' => 'Unflagged all',
 'deleted_all' => 'Deleted all',
 'menu_queue' => "Queue",
+'menu_adminqueue' => "Admin Queue",
 'menu_flagged' => "Flagged Quotes",
 'menu_addnews' => "Add News",
 'menu_users' => "Users",

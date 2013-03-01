@@ -60,6 +60,7 @@ $lang = array (
 'unflagged_all' => 'Kaikki hyväksytty',
 'deleted_all' => 'Kaikki poistettu',
 'menu_queue' => "Jonossa",
+'menu_adminqueue' => "Hyväksyttäviä",
 'menu_flagged' => "Tarkistettavia",
 'menu_addnews' => "Lisää uutinen",
 'menu_users' => "Käyttäjät",
