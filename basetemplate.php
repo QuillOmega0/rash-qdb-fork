@@ -463,7 +463,7 @@ abstract class BaseTemplate {
       <td class="quote_no">
        <label>'.lang('quote_queue_no').'<input type="radio" name="q'.$quoteid.'" value="n'.$quoteid.'"></label>
       </td>
-      <td>
+      <td>'.$this->edit_quote_button($quoteid).'
         <div class="quote_quote">
 		'.$quotetxt.'
         </div>
