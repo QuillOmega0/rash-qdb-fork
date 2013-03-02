@@ -197,15 +197,13 @@ function flag($quote_num, $method)
     print $TEMPLATE->flag_page($quote_num, mangle_quote_text($row['quote']), $row['flag']);
 }
 
-// function vote($quote_num, $method)
-// This function increments or decrements the rating of the quote in quotes.
-//
-function vote($quote_num, $method)
+function vote($quote_num, $method, $ajaxy=FALSE)
 {
     global $db, $TEMPLATE;
 
     $qid = $db->getOne("SELECT quote_id FROM ".db_tablename('tracking')." WHERE user_ip=".$db->quote($_SESSION['voteip']).' AND quote_id='.$db->quote((int)$quote_num));
     if (isset($qid) && $qid == $quote_num) {
+	if ($ajaxy) return 'ALREADY_VOTED';
 	$TEMPLATE->add_message(lang('tracking_check_2'));
 	return;
     }
@@ -220,6 +218,7 @@ function vote($quote_num, $method)
     }
     if ($vote != 0) {
 	$res = $db->query("INSERT INTO ".db_tablename('tracking')." (user_ip, quote_id, vote) VALUES(".$db->quote($_SESSION['voteip']).", ".$db->quote($quote_num).", ".$vote.")");
+	if ($ajaxy) return 'VOTE_OK';
 	$TEMPLATE->add_message(lang('tracking_check_1'));
     }
 }
@@ -886,7 +885,7 @@ $page[2] = 0;
 $page = explode($CONFIG['GET_SEPARATOR'], $_SERVER['QUERY_STRING']);
 
 
-if(!($page[0] == 'rss'))
+if(!($page[0] === 'rss' || $page[0] === 'ajaxvote'))
     $TEMPLATE->printheader(title($page[0]), $CONFIG['site_short_title'], $CONFIG['site_long_title']);
 
 $page[1] = (isset($page[1]) ? $page[1] : null);
@@ -1026,10 +1025,11 @@ switch($page[0])
 	    if (isset($_SESSION['logged_in']) && ($_SESSION['level'] <= USER_SUPERUSER))
 		edit_users($page[1], $page[2]);
 	    break;
+	case 'ajaxvote':
 	case 'vote':
 	    if (isset($CONFIG['login_required']) && ($CONFIG['login_required'] == 1) && !isset($_SESSION['logged_in']))
 		break;
-	    vote($page[1], $page[2]);
+	    vote($page[1], $page[2], ($page[0] === 'ajaxvote'));
 	    break;
 	case 'news':
 	    news_page();
@@ -1061,7 +1061,7 @@ switch($page[0])
 	    }
 
 }
-if(!($page[0] == 'rss'))
+if(!($page[0] === 'rss' || $page[0] === 'ajaxvote'))
     $TEMPLATE->printfooter(get_db_stats());
 
 $db->disconnect();

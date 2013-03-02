@@ -19,6 +19,7 @@ header('Content-type: text/html; charset=utf-8');
   @import "./templates/nhqdb/style.css";
  </style>
 <script src="./templates/nhqdb/util.js" type="text/javascript"></script>
+<script src="qdb.js" type="text/javascript"></script>
 </head>
 <body>
  <div id="site_all">
@@ -367,9 +368,9 @@ function quote_iter($quoteid, $rating, $quotetxt, $canflag, $canvote, $date=null
     <div class="quote_separator">&nbsp;</div>
     <div class="quote_option-bar">
      <a href="?'.urlargs($quoteid).'" class="quote_number">#'.$quoteid.'</a>'
-	.' '.$this->quote_upvote_button($quoteid, $canvote)
-	.' '.'<span class="quote_rating">('.$rating.')</span>'
-	.' '.$this->quote_downvote_button($quoteid, $canvote)
+	.' '.$this->quote_upvote_button($quoteid, $canvote, TRUE)
+	.' '.'<span class="quote_rating">(<span id="quote_rating_'.$quoteid.'">'.$rating.'</span>)</span>'
+	.' '.$this->quote_downvote_button($quoteid, $canvote, TRUE)
 	.' '.$this->quote_flag_button($quoteid, $canflag)
 	.' '.edit_quote_button($quoteid);
 

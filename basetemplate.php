@@ -83,7 +83,9 @@ abstract class BaseTemplate {
 
     function printheader($title, $topleft='', $topright='')
     {
-	return '<html><head><title>'.$title.'</title></head><body>';
+	return '<html><head><title>'.$title.'</title>
+<script src="qdb.js" type="text/javascript"></script>
+</head><body>';
     }
 
     function printfooter($db_stats=null)
@@ -494,18 +496,28 @@ abstract class BaseTemplate {
 	return $str;
     }
 
-    function quote_upvote_button($quoteid, $canvote)
+    function quote_upvote_button($quoteid, $canvote, $ajaxy=FALSE)
     {
-	if (!$canvote)
-	    return '<a href="?'.urlargs('vote',$quoteid,'plus').'" class="quote_plus" title="'.lang('upvote').'">+</a>';
-	return '<span class="quote_plus" title="'.lang('cannot_vote_'.$canvote).'">+</span>';
+	$s = ' class="quote_plus" id="quote_plus_'.$quoteid.'"';
+	if (!$canvote) {
+	    if ($ajaxy) {
+		return '<a href="javascript:ajax_vote('.$quoteid.',1);" '.$s.' title="'.lang('upvote').'">+</a>';
+	    }
+	    return '<a href="?'.urlargs('vote',$quoteid,'plus').'" '.$s.' title="'.lang('upvote').'">+</a>';
+	}
+	return '<span '.$s.' title="'.lang('cannot_vote_'.$canvote).'">+</span>';
     }
 
-    function quote_downvote_button($quoteid, $canvote)
+    function quote_downvote_button($quoteid, $canvote, $ajaxy=FALSE)
     {
-	if (!$canvote)
-	    return '<a href="?'.urlargs('vote',$quoteid,'minus').'" class="quote_minus" title="'.lang('downvote').'">-</a>';
-	return '<span class="quote_minus" title="'.lang('cannot_vote_'.$canvote).'">-</span>';
+	$s = ' class="quote_minus" id="quote_minus_'.$quoteid.'"';
+	if (!$canvote) {
+	    if ($ajaxy) {
+		return '<a href="javascript:ajax_vote('.$quoteid.',-1);" '.$s.' title="'.lang('downvote').'">-</a>';
+	    }
+	    return '<a href="?'.urlargs('vote',$quoteid,'minus').'" '.$s.' title="'.lang('downvote').'">-</a>';
+	}
+	return '<span '.$s.' title="'.lang('cannot_vote_'.$canvote).'">-</span>';
     }
 
     function quote_flag_button($quoteid, $canflag)
@@ -524,7 +536,7 @@ abstract class BaseTemplate {
     <div class="quote_option-bar">
      <a href="?'.urlargs($quoteid).'" class="quote_number">#'.$quoteid.'</a>'
 	    .' '.$this->quote_upvote_button($quoteid, $canvote)
-	    .' '.'<span class="quote_rating">('.$rating.')</span>'
+	    .' '.'<span class="quote_rating">(<span id="quote_rating_'.$quoteid.'">'.$rating.'</span>)</span>'
 	    .' '.$this->quote_downvote_button($quoteid, $canvote)
 	    .' '.$this->quote_flag_button($quoteid, $canflag)
 	    .' '.edit_quote_button($quoteid);
