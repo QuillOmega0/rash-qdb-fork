@@ -500,10 +500,13 @@ abstract class BaseTemplate {
     {
 	$s = ' class="quote_plus" id="quote_plus_'.$quoteid.'"';
 	if (!$canvote) {
+	    $url = '<a href="?'.urlargs('vote',$quoteid,'plus').'" '.$s.' title="'.lang('upvote').'">+</a>';
 	    if ($ajaxy) {
-		return '<a href="javascript:ajax_vote('.$quoteid.',1);" '.$s.' title="'.lang('upvote').'">+</a>';
+		return '<script type="text/javascript">
+document.write(\'<a href="javascript:ajax_vote('.$quoteid.',1);" '.$s.' title="'.lang('upvote').'">+</a>\');
+</script><noscript>'.$url.'</noscript>';
 	    }
-	    return '<a href="?'.urlargs('vote',$quoteid,'plus').'" '.$s.' title="'.lang('upvote').'">+</a>';
+	    return $url;
 	}
 	return '<span '.$s.' title="'.lang('cannot_vote_'.$canvote).'">+</span>';
     }
@@ -512,10 +515,13 @@ abstract class BaseTemplate {
     {
 	$s = ' class="quote_minus" id="quote_minus_'.$quoteid.'"';
 	if (!$canvote) {
+	    $url = '<a href="?'.urlargs('vote',$quoteid,'minus').'" '.$s.' title="'.lang('downvote').'">-</a>';
 	    if ($ajaxy) {
-		return '<a href="javascript:ajax_vote('.$quoteid.',-1);" '.$s.' title="'.lang('downvote').'">-</a>';
+		return '<script type="text/javascript">
+document.write(\'<a href="javascript:ajax_vote('.$quoteid.',-1);" '.$s.' title="'.lang('downvote').'">-</a>\');
+</script><noscript>'.$url.'</noscript>';
 	    }
-	    return '<a href="?'.urlargs('vote',$quoteid,'minus').'" '.$s.' title="'.lang('downvote').'">-</a>';
+	    return $url;
 	}
 	return '<span '.$s.' title="'.lang('cannot_vote_'.$canvote).'">-</span>';
     }
