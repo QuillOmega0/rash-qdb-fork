@@ -14,7 +14,7 @@ function transformTag(elem, newtag)
 }
 
 
-function ajax_vote_handler(id, $adj)
+function ajax_vote_handler(id, adj)
 {
     if (req.readyState == 4) { // Complete
 	if (req.status == 200) { // OK response
