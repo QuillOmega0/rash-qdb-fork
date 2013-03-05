@@ -5,11 +5,8 @@ function transformTag(elem, newtag)
     var children = elem.childNodes;
     var parent = elem.parentNode;
     var newNode = document.createElement(newtag);
-    for (prop in elem) {
-	if (prop != 'id') {
-	    newNode[prop] = elem[prop];
-	}
-    }
+    newNode.innerHTML = elem.innerHTML;
+    newNode.className = elem.className;
     parent.replaceChild(newNode,elem);
 }
 
