@@ -2,6 +2,8 @@
 
 class NHQDBTemplate extends BaseTemplate {
 
+    public $resizehooks = 'onkeyup="resizeTextarea(this)" onmouseup="resizeTextarea(this)" onblur="resizeTextarea(this)"';
+
 function printheader($title, $topleft='nhqdb', $topright='#NetHack Quote Database')
 {
 ob_start();
@@ -109,7 +111,7 @@ function add_quote_page($quotetxt='', $added_quote_html='', $wasadded=null)
     $str .= $added_quote_html;
 
     $str .= '<form action="?'.urlargs('add','submit').'" method="post">
-     <textarea cols="80" rows="5" name="rash_quote" id="add_quote" onkeyup="resizeTextarea(this)" onmouseup="resizeTextarea(this)" onblur="resizeTextarea(this)">'.($wasadded ? '' : $quotetxt).'</textarea><br />';
+     <textarea cols="80" rows="5" name="rash_quote" id="add_quote" '.$this->resizehooks.'>'.($wasadded ? '' : $quotetxt).'</textarea><br />';
     $str .= $CAPTCHA->get_CAPTCHA('add_quote');
     $str .= '
         <input type="submit" value="'.lang('preview_quote_btn').'" id="add_preview" name="preview" />
@@ -136,7 +138,7 @@ function edit_quote_page($quoteid, $quotetxt, $edited_quote_html='')
     $str .= $edited_quote_html;
 
     $str .= '<form action="?'.urlargs('edit','submit', $quoteid).'" method="post">
-     <textarea cols="80" rows="5" name="rash_quote" id="edit_quote" onkeyup="resizeTextarea(this)" onmouseup="resizeTextarea(this)" onblur="resizeTextarea(this)">'.$quotetxt.'</textarea><br />
+     <textarea cols="80" rows="5" name="rash_quote" id="edit_quote" '.$this->resizehooks.'>'.$quotetxt.'</textarea><br />
      <input type="submit" value="'.lang('edit_quote_btn').'" id="edit_submit" />
      <input type="reset" value="'.lang('edit_reset_btn').'" id="edit_reset" />
     </form>';
@@ -217,7 +219,7 @@ function add_news_page($previewnews, $newstxt)
     if (isset($previewnews)) $str .= '<div class="admin_preview_news">'.$previewnews.'</div>';
     $str .= '<p>'.lang('add_news_help').'
    <form method="post" action="?'.urlargs('add_news','submit').'">
-	<textarea cols="80" rows="5" name="news" id="add_news_news" onkeyup="resizeTextarea(this)" onmouseup="resizeTextarea(this)" onblur="resizeTextarea(this)">'.$newstxt.'</textarea><br />
+	<textarea cols="80" rows="5" name="news" id="add_news_news" '.$this->resizehooks.'>'.$newstxt.'</textarea><br />
         <input type="submit" value="'.lang('preview_news_btn').'" id="add_preview" name="preview" />
         <input type="submit" value="'.lang('add_news_btn').'" id="add_news" name="submit" />
    </form>

@@ -25,25 +25,35 @@ function mangle_quote(textareaid)
   var txtarea = document.getElementById(textareaid);
   if (!txtarea) return;
 
+  var tsregexen = new Array(
+	  /^\[?\d\d:?\d\d(:?\d\d)?\]? +/,
+	  /^\[?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[012]\d +\d\d:?\d\d(:?\d\d)?\]? +/
+  );
+
   var txt = txtarea.value;
 
   /* fix whitespace */
   txt = txt.replace(/^\s+/, "");
   txt = txt.replace(/\s+$/, "");
   txt = txt.replace(/ +$/m, "");
+  txt = txt.replace(/\t/gm, " ");
 
   /* try to fix different timestamp styles */
   var lines = txt.split("\n");
-  var style = 0;
-  var oldstyle = 0;
+  var style = -1;
+  var oldstyle = -1;
   for (var i = 0; i < lines.length; i++) {
-      style = 0;
-      if (lines[i].match(/^\[?\d\d:?\d\d(:?\d\d)?\]? +/)) { style = 1; }
-      else if (lines[i].match(/^\[?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Dec|) +[012]\d +\d\d:?\d\d(:?\d\d)?\]? +/i)) { style = 2; }
+      style = -1;
+      for (var j = 0; j < tsregexen.length; j++) {
+	  if (lines[i].match(tsregexen[j])) {
+	      style = j;
+	      break;
+	  }
+      }
 
-      if (style != 0) {
-	  if ((oldstyle != 0) && (oldstyle != style)) {
-	      style = -1;
+      if (style != -1) {
+	  if ((oldstyle != -1) && (oldstyle != style)) {
+	      style = -2;
 	      break; /* different style lines, bail out */
 	  } else {
 	      oldstyle = style;
@@ -51,15 +61,9 @@ function mangle_quote(textareaid)
       }
   }
 
-  if (style > 0) {
+  if (style >= 0) {
       for (var i = 0; i < lines.length; i++) {
-	  var tmp;
-	  switch (style) {
-	  case 1: tmp = lines[i].replace(/^\[?\d\d:?\d\d(:?\d\d)?\]? +/, ""); break;
-	  case 2: tmp = lines[i].replace(/^\[?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Dec|) +[012]\d +\d\d:?\d\d(:?\d\d)?\]? +/i, ""); break;
-	  default: tmp = lines[i]; break;
-	  }
-	  lines[i] = tmp;
+	  lines[i] = lines[i].replace(tsregexen[style],"");
       }
   }
 
