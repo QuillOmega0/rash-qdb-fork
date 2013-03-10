@@ -22,6 +22,7 @@ $lang = array (
 'pagetitle_change_pw' => 'Change Password',
 'pagetitle_flag' => 'Flag a Quote',
 'pagetitle_quotenum' => 'Quote #%s',
+'selected_quotes' => 'Selected Quotes',
 'admin_login_greeting'		=> "Welcome to Rash admin panel! Please log in now.",
 'user_login_greeting'		=> 'Please log in.  If you haven\'t registered yet, do so <a href="?register">here</a>.',
 'home_greeting'				=> "<p>Hello! Enjoy our collection of quotes and if you feel the pleasure, you can add some of your own.</p>"

@@ -1052,7 +1052,7 @@ switch($page[0])
 			$idx++;
 		    }
 		    $query = "SELECT * FROM ".db_tablename('quotes')." WHERE queue=0 and (".implode(' or ', $ids).") ORDER BY CASE id ".implode($order)." END";
-		    if ($idx > 1) $title = 'Selected Quotes';
+		    if ($idx > 1) $title = lang('selected_quotes');
 		    else $title = "#${_SERVER['QUERY_STRING']}";
 		} else {
 		    $query = "SELECT * FROM ".db_tablename('quotes')." WHERE queue=0 and id =".$db->quote((int)$idlist[0]);

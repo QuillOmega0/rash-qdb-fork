@@ -22,6 +22,7 @@ $lang = array (
 'pagetitle_change_pw' => 'Vaihda salasanaa',
 'pagetitle_flag' => 'Merkitse lainaus',
 'pagetitle_quotenum' => 'Lainaus #%s',
+'selected_quotes' => 'Valitut lainaukset',
 'admin_login_greeting'		=> "Kirjaudu sisään ylläpitäjän tunnuksella",
 'user_login_greeting'		=> 'Voit rekisteröidä käyttäjätunnuksesi <a href="?register">täällä</a>.',
 'home_greeting'				=> "<p>Tervehdys! Täällä voit selata tai lisätä lainauksia irc-kanavalta.</p>"
