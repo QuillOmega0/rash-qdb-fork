@@ -216,3 +216,18 @@ div#add_outputmsg_quote{
 div.quote_pagenums{
 	text-align: center;
 }
+
+table.users {
+    border-collapse:collapse;
+}
+
+table.users tr:hover td {
+    background-color: #e0e0e0;
+}
+
+table.users,
+table.users th,
+table.users td {
+    border: 1px solid lightgray;
+    padding: 0 0.5em;
+}

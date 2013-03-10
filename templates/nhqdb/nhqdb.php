@@ -284,23 +284,13 @@ function edit_user_page_table($innerhtml)
 {
 	$str = '  <h1 id="admin_users_title">'.lang('users_list_title').'</h1>' . $this->get_messages() . '
   <form action="?'.urlargs('users','delete').'" method="post">
-   <table border="1" cellpadding="1" cellspacing="0" style="border-style: solid;border-color: #125443">
+   <table class="users">
     <tr>
-     <td>
-      &nbsp;'.lang('users_list_id').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_username').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_pwhash').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_level').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_delete').'&nbsp;
-     </td>
+     <th>'.lang('users_list_id').'</th>
+     <th>'.lang('users_list_username').'</th>
+     <th>'.lang('users_list_pwhash').'</th>
+     <th>'.lang('users_list_level').'</th>
+     <th>'.lang('users_list_delete').'</th>
     </tr>
 ';
 

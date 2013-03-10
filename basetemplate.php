@@ -379,20 +379,11 @@ abstract class BaseTemplate {
     function edit_user_page_table_row($id, $user, $password, $level)
     {
 	return '    <tr>
-     <td>
-      <a href="?'.urlargs('users','edit',$id).'">'.$id.'</a>
-     </td>
-     <td>
-      <a href="?'.urlargs('users','edit',$id).'">'.$user.'</a>
-     </td>
-     <td>
-      <a href="?'.urlargs('users','edit',$id).'">'.$password.'</a>
-     </td>
-     <td>
-      <a href="?'.urlargs('users','edit',$id).'">'.$level.'</a>
-     </td>
-     <td>
-      <input type="checkbox" name="d'.$id.'" value="'.$id.'" />
+     <td>'.$id.'</td>
+     <td><a href="?'.urlargs('users','edit',$id).'">'.$user.'</a></td>
+     <td>'.$password.'</td>
+     <td>'.$level.'</td>
+     <td><input type="checkbox" name="d'.$id.'" value="'.$id.'" /></td>
     </tr>
 ';
     }
@@ -401,23 +392,13 @@ abstract class BaseTemplate {
     {
 	$str = '  <h1 id="admin_users_title">'.lang('users_list_title').'</h1>
   <form action="?'.urlargs('users','delete').'" method="post">
-   <table border="1" cellpadding="1" cellspacing="0" style="border-style: solid;border-color: #125443">
+   <table class="users">
     <tr>
-     <td>
-      &nbsp;'.lang('users_list_id').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_username').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_pwhash').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_level').'&nbsp;
-     </td>
-     <td>
-      &nbsp;'.lang('users_list_delete').'&nbsp;
-     </td>
+     <th>'.lang('users_list_id').'</th>
+     <th>'.lang('users_list_username').'</th>
+     <th>'.lang('users_list_pwhash').'</th>
+     <th>'.lang('users_list_level').'</th>
+     <th>'.lang('users_list_delete').'</th>
     </tr>
 ';
 
