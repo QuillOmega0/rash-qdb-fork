@@ -31,13 +31,16 @@ input:focus {
 /* quote-output styles */
 
 div.quote_quote{
-	font-family: courier new, lucida console, fixed;
 	font-size: smaller;
 	padding-bottom: 5pt;
+}
+.quote_option-bar {
+    padding-bottom: 0.5em;
 }
 .quote_separator { display: none; }
 .quote_whole{
     padding: 1em 0.25em;
+    font-family: courier new, lucida console, fixed;
 }
 .quote_whole:nth-child(odd) {
 	background-color:#f0f0f0;
