@@ -27,7 +27,7 @@ function mangle_quote(textareaid)
 
   var tsregexen = new Array(
 	  /^\[?\d\d:?\d\d(:?\d\d)?\]? +/,
-	  /^\[?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[012]\d +\d\d:?\d\d(:?\d\d)?\]? +/
+	  /^\[?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0123]\d +\d\d:?\d\d(:?\d\d)?\]? +/
   );
 
   var txt = txtarea.value;
