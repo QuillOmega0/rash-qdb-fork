@@ -30,6 +30,10 @@ input:focus {
 
 /* quote-output styles */
 
+.editquote_outputmsg_quote {
+	font-family: courier new, lucida console, fixed;
+}
+
 div.quote_quote{
 	font-family: courier new, lucida console, fixed;
 	font-size: smaller;
