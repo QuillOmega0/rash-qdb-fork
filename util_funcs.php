@@ -1,9 +1,10 @@
 <?php
 
-/* Change urls to clickable links, and change newlines to br-tags. */
+/* Change urls to clickable links, convert \\emote to [](/emote), and change newlines to br-tags. */
 function mangle_quote_text($txt)
 {
     $txt = preg_replace('/((https?|ftp):\/\/([\w\d\-]+)(\.[\w\d\-]+){1,})([\/\?\w\d\.:=&+%~_\-]+(#[\w\d_]+)?)?/', '<A href="\\1\\5">\\1\\5</A>', $txt);
+    $txt = preg_replace('/\\\\\\\\([\:\_\-a-zA-Z\d!]+)/i', '[](/\\1)', $txt);
     $txt = nl2br($txt);
     return $txt;
 }
