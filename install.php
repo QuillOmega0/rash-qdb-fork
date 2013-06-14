@@ -310,7 +310,8 @@ If (isset($_POST['submit'])) {
 
     $error |= mk_db_table(db_tablename('news'), "id int(11) NOT NULL auto_increment primary key,
 							news text NOT NULL,
-							date int(10) NOT NULL");
+							date int(10) NOT NULL,
+							admin_name varchar(20) NOT NULL");
 
     if (trim($_POST['adminuser']) != '')
 	$error |= mk_user($_POST['adminuser'], $_POST['adminpass']);

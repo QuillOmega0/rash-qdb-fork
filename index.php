@@ -1,4 +1,10 @@
 <?php
+/*
+TODO: Add IP Tracking
+TODO: Add admin notifications for flagged or pending quotes
+TODO: Have it show who approved what quote
+*/
+
 
 if (isset($_GET['debug'])) {
     error_reporting(E_ALL);
@@ -231,7 +237,7 @@ function news_page()
     $news = '';
 
     while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)) {
-	$news .= $TEMPLATE->news_item($row['news'], date($CONFIG['news_time_format'], $row['date']));
+	$news .= $TEMPLATE->news_item($row['news'], date($CONFIG['news_time_format'], $row['date']), $row['admin_name']);
     }
     print $TEMPLATE->news_page($news);
 }
@@ -248,7 +254,7 @@ function home_generation()
     $news = '';
 
     while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)) {
-	$news .= $TEMPLATE->news_item($row['news'], date($CONFIG['news_time_format'], $row['date']));
+	$news .= $TEMPLATE->news_item($row['news'], date($CONFIG['news_time_format'], $row['date']), $row['admin_name']);
     }
 
     print $TEMPLATE->main_page($news);
@@ -416,7 +422,7 @@ function edit_news($method, $id)
     } else if ($method == 'update') {
 	if (isset($_POST['preview'])) {
 	    $newstxt = nl2br(trim($_POST['news']));
-	    $news = $TEMPLATE->news_item($newstxt, date($CONFIG['news_time_format'], mktime()));
+	    $news = $TEMPLATE->news_item($newstxt, date($CONFIG['news_time_format'], mktime()), $_SESSION['user']);
 	    $newstxt = preg_replace('/\<br \/\>/', '', $newstxt);
 	    $news .= $TEMPLATE->edit_news_form($id, $newstxt);
 	} else if (isset($_POST['delete'])) {
@@ -440,7 +446,7 @@ function edit_news($method, $id)
     while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)) {
 	$mode = 1;
 	if ($row['id'] == $id) $mode = 2;
-	$news .= $TEMPLATE->news_item($row['news'], date($CONFIG['news_time_format'], $row['date']), $row['id'], $mode);
+	$news .= $TEMPLATE->news_item($row['news'], date($CONFIG['news_time_format'], $row['date']), $row['admin_name'], $row['id'], $mode);
     }
 
     print $TEMPLATE->edit_news_page($news);
@@ -456,9 +462,9 @@ function add_news($method)
 	$rawnews = trim($_POST['news']);
 	$news = nl2br($rawnews);
 	if (isset($_POST['preview'])) {
-	    $innerhtml = $TEMPLATE->news_item($news, date($CONFIG['news_time_format'], mktime()));
+	    $innerhtml = $TEMPLATE->news_item($news, date($CONFIG['news_time_format'], mktime()), $_SESSION['user']);
 	} else {
-	    $db->query("INSERT INTO ".db_tablename('news')." (news,date) VALUES(".$db->quote($news).", '".mktime()."');");
+	    $db->query("INSERT INTO ".db_tablename('news')." (news,date,admin_name) VALUES(".$db->quote($news).", '".mktime()."', '".$_SESSION['user']."');");
 	    $TEMPLATE->add_message(lang('news_added'));
 	    $rawnews = '';
 	}
@@ -626,26 +632,26 @@ function userlogin($method)
 {
     global $CONFIG, $TEMPLATE, $db;
     if ($method == 'login') {
-	$res =& $db->query("SELECT salt FROM ".db_tablename('users')." WHERE LOWER(user)=".$db->quote(strtolower($_POST['rash_username'])));
-	$salt = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        $res =& $db->query("SELECT salt FROM ".db_tablename('users')." WHERE LOWER(user)=".$db->quote(strtolower($_POST['rash_username'])));
+        $salt = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
-	// if there is no presence of a salt, it is probably md5 since old rash used plain md5
-	if(!$salt['salt']){
-	    $res =& $db->query("SELECT * FROM ".db_tablename('users')." WHERE LOWER(user)=".$db->quote(strtolower($_POST['rash_username']))." AND `password` ='".md5($_POST['rash_password'])."'");
-	    $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
-	}
-	// if there is presense of a salt, it is probably new rash passwords, so it is salted md5
-	else{
-	    $res =& $db->query("SELECT * FROM ".db_tablename('users')." WHERE LOWER(user)=".$db->quote(strtolower($_POST['rash_username']))." AND `password` ='".crypt($_POST['rash_password'], $salt['salt'])."'");
-	    $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
-	}
+        // if there is no presence of a salt, it is probably md5 since old rash used plain md5
+        if(!$salt['salt']){
+            $res =& $db->query("SELECT * FROM ".db_tablename('users')." WHERE LOWER(user)=".$db->quote(strtolower($_POST['rash_username']))." AND `password` ='".md5($_POST['rash_password'])."'");
+            $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        }
+        // if there is presense of a salt, it is probably new rash passwords, so it is salted md5
+        else{
+            $res =& $db->query("SELECT * FROM ".db_tablename('users')." WHERE LOWER(user)=".$db->quote(strtolower($_POST['rash_username']))." AND `password` ='".crypt($_POST['rash_password'], $salt['salt'])."'");
+            $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        }
 
-	// if there is no row returned for the user, the password is expected to be false because of the AND conditional in the query
-	if(!$row['user']){
-	    $TEMPLATE->add_message(lang('login_error'));
-	} else {
-	    set_user_logged($row);
-	}
+        // if there is no row returned for the user, the password is expected to be false because of the AND conditional in the query
+        if(!$row['user']){
+            $TEMPLATE->add_message(lang('login_error'));
+        } else {
+            set_user_logged($row);
+        }
     }
     print $TEMPLATE->user_login_page();
 }
@@ -841,7 +847,7 @@ function edit_quote($method, $quoteid)
     print $TEMPLATE->edit_quote_page($quoteid, $quotxt, $innerhtml);
 }
 
-
+//TODO: Add IP tracking
 function add_quote_do_inner()
 {
     global $CONFIG, $TEMPLATE, $db;
@@ -904,6 +910,7 @@ $voteable = '';
 if ($page[1] === 'voteable' && isset($_SESSION['voteip']))
     $voteable = ' AND q.id NOT IN (SELECT t.quote_id FROM '.db_tablename('tracking').' t WHERE t.quote_id=q.id AND t.user_ip='.$db->quote($_SESSION['voteip']).') ';
 
+//Slects page to go to.
 switch($page[0])
 {
 	case 'add':

@@ -93,13 +93,17 @@ abstract class BaseTemplate {
 	return '</body></html>';
     }
 
-    function news_item($news, $date, $id=null, $mode=0)
+    function news_item($news, $date, $admin_name, $id=null, $mode=0)
     {
 	if ($mode == 0) {
-	    return '<div class="news_entry"><div class="news_date">'.$date.'</div>'.
+	    return '<div class="news_entry"><div class="news_date">'.$date.
+        ' - '.$admin_name.
+        '</div>'.
 	    '<div class="news_news">'.$news.'</div></div>';
 	} else {
-	    $str = '<div class="news_entry"><div class="news_date"><a href="?'.urlargs('edit_news','edit',$id).'">'.$date.'</a></div>'.
+	    $str = '<div class="news_entry"><div class="news_date"><a href="?'.urlargs('edit_news','edit',$id).'">'.$date.'</a>'.
+        ' - '. $admin_name.
+        '</div>'.
 		'<div class="news_news">'.$news.'</div></div>';
 
 	    if ($mode == 2) $str = '<div class="hilight_news_entry">'.$str.'</div>';
