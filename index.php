@@ -860,7 +860,7 @@ function add_quote_do_inner()
     $quotxt = htmlspecialchars(trim($_POST["rash_quote"]));
     $note = htmlspecialchars(trim($_POST["rash_note"]));
     //$innerhtml = $TEMPLATE->add_quote_outputmsg(mangle_quote_text($quotxt),mangle_quote_text($note));
-    $res =& $db->query("INSERT INTO " . db_tablename('quotes') . " (quote, rating, flag, queue, date, note) VALUES(" . $db->quote($quotxt) . ", 0, " . $flag . ", " . $CONFIG['moderated_quotes'] . ", '" . mktime() . "', '" . $note . "')");
+    $res =& $db->query("INSERT INTO " . db_tablename('quotes') . " (quote, rating, flag, queue, date, note, ip) VALUES(" . $db->quote($quotxt) . ", 0, " . $flag . ", " . $CONFIG['moderated_quotes'] . ", '" . mktime() . "', '" . $note . "', '" . $_SERVER['REMOTE_ADDR'] . "')");
     if (DB::isError($res)) {
         //TODO: Add Q0 Shrug
         echo("Sorry, a system error occurred: ");
