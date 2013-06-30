@@ -33,11 +33,24 @@ input:focus {
 #editquote_outputmsg_quote {
 	font-family: courier new, lucida console, fixed;
 }
+#editquote_outputmsg_note {
+    font-family: courier new, lucida console, fixed;
+    font-size:smaller;
+    font-style: italic;
+}
 
 div.quote_quote{
 	font-family: courier new, lucida console, fixed;
 	font-size: smaller;
 	padding-bottom: 5pt;
+}
+
+div.quote_note{
+    font-family: courier new, lucida console, fixed;
+    font-size: smaller;
+    margin-top: -5px;
+    padding-bottom: 5pt;
+    font-style: italic;
 }
 .quote_option-bar {
     padding-bottom: 0.5em;
@@ -217,6 +230,13 @@ div#add_outputmsg_quote{
 	padding-top: 10pt;
 	font-family: monospace;
 	padding-bottom: 10pt;
+}
+div#add_outputmsg_note{
+    font-family: monospace;
+    margin-top: -5px;
+    font-size: smaller;
+    font-style: italic;
+    padding-bottom: 10pt;
 }
 
 

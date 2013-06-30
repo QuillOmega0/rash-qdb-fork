@@ -189,7 +189,7 @@ function flag($quote_num, $method)
 {
     global $CONFIG, $TEMPLATE, $CAPTCHA, $db;
 
-    $res =& $db->query("SELECT id,flag,quote FROM " . db_tablename('quotes') . " WHERE id = " . $db->quote((int)$quote_num) . " LIMIT 1");
+    $res =& $db->query("SELECT id,flag,quote,note FROM " . db_tablename('quotes') . " WHERE id = " . $db->quote((int)$quote_num) . " LIMIT 1");
     $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
     if ($method == 'verdict') {
@@ -201,7 +201,7 @@ function flag($quote_num, $method)
             $TEMPLATE->add_message(lang('flag_currently_flagged'));
         }
     }
-    print $TEMPLATE->flag_page($quote_num, mangle_quote_text($row['quote']), $row['flag']);
+    print $TEMPLATE->flag_page($quote_num, mangle_quote_text($row['quote']), $row['flag'], mangle_quote_text(['note']));
 }
 
 function vote($quote_num, $method, $ajaxy = FALSE)
@@ -400,7 +400,7 @@ function quote_generation($query, $origin, $page = 1, $quote_limit = 50, $page_l
         $nquotes++;
         $canvote = user_can_vote_quote($row['id']);
         $datefmt = date($CONFIG['quote_time_format'], $row['date']);
-        $inner .= $TEMPLATE->quote_iter($row['id'], $row['rating'], mangle_quote_text($row['quote']), ($row['flag'] == 0), $canvote, $datefmt);
+        $inner .= $TEMPLATE->quote_iter($row['id'], $row['rating'], mangle_quote_text($row['quote']), ($row['flag'] == 0), $canvote, $datefmt, mangle_quote_text($row['note']));
     }
 
     if (!$nquotes)
@@ -717,7 +717,7 @@ function quote_queue($method)
     $innerhtml = '';
     $x = 0;
     while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
-        $innerhtml .= $TEMPLATE->quote_queue_page_iter($row['id'], mangle_quote_text($row['quote']));
+        $innerhtml .= $TEMPLATE->quote_queue_page_iter($row['id'], mangle_quote_text($row['quote']), mangle_quote_text($row['note']));
         $x++;
     }
 
@@ -774,7 +774,7 @@ function flag_queue($method)
 
     $x = 0;
     while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
-        $innerhtml .= $TEMPLATE->flag_queue_page_iter($row['id'], mangle_quote_text($row['quote']));
+        $innerhtml .= $TEMPLATE->flag_queue_page_iter($row['id'], mangle_quote_text($row['quote']), mangle_quote_text($row['note']));
         $x++;
     }
 
@@ -832,18 +832,24 @@ function edit_quote($method, $quoteid)
     if ($method == 'submit') {
 
         $quotxt = htmlspecialchars(trim($_POST["rash_quote"]));
+        $note = htmlspecialchars(trim($_POST["rash_note"]));
 
-        $innerhtml = $TEMPLATE->edit_quote_outputmsg(mangle_quote_text($quotxt));
+        $innerhtml = $TEMPLATE->edit_quote_outputmsg(mangle_quote_text($quotxt), mangle_quote_text($note));
 
         $res =& $db->query("UPDATE " . db_tablename('quotes') . " SET quote=" . $db->quote($quotxt) . " WHERE id=" . $db->quote($quoteid));
         if (DB::isError($res)) {
             die($res->getMessage());
         }
+        $res =& $db->query("UPDATE " . db_tablename('quotes') . " SET note=" . $db->quote($note) . " WHERE id=" . $db->quote($quoteid));
+        if (DB::isError($res)) {
+            die($res->getMessage());
+        }
     } else {
         $quotxt = $db->getOne("SELECT quote FROM " . db_tablename('quotes') . " WHERE id=" . $db->quote($quoteid));
+        $note = $db->getOne("SELECT note FROM " . db_tablename('quotes') . " WHERE id =" . $db->quote($quoteid));
     }
 
-    print $TEMPLATE->edit_quote_page($quoteid, $quotxt, $innerhtml);
+    print $TEMPLATE->edit_quote_page($quoteid, $quotxt, $innerhtml, $note);
 }
 
 //TODO: Add IP tracking
@@ -852,10 +858,16 @@ function add_quote_do_inner()
     global $CONFIG, $TEMPLATE, $db;
     $flag = (isset($CONFIG['auto_flagged_quotes']) && ($CONFIG['auto_flagged_quotes'] == 1)) ? 2 : 0;
     $quotxt = htmlspecialchars(trim($_POST["rash_quote"]));
-    $innerhtml = $TEMPLATE->add_quote_outputmsg(mangle_quote_text($quotxt));
-    $res =& $db->query("INSERT INTO " . db_tablename('quotes') . " (quote, rating, flag, queue, date) VALUES(" . $db->quote($quotxt) . ", 0, " . $flag . ", " . $CONFIG['moderated_quotes'] . ", '" . mktime() . "')");
+    $note = htmlspecialchars(trim($_POST["rash_note"]));
+    //$innerhtml = $TEMPLATE->add_quote_outputmsg(mangle_quote_text($quotxt),mangle_quote_text($note));
+    $res =& $db->query("INSERT INTO " . db_tablename('quotes') . " (quote, rating, flag, queue, date, note) VALUES(" . $db->quote($quotxt) . ", 0, " . $flag . ", " . $CONFIG['moderated_quotes'] . ", '" . mktime() . "', '" . $note . "')");
     if (DB::isError($res)) {
+        //TODO: Add Q0 Shrug
+        echo("Sorry, a system error occurred: ");
         die($res->getMessage());
+    }
+    else{
+        $innerhtml = $TEMPLATE->add_quote_outputmsg(mangle_quote_text($quotxt),mangle_quote_text($note));
     }
     return $innerhtml;
 }
@@ -866,14 +878,16 @@ function add_quote($method)
 
     $innerhtml = '';
     $quotxt = '';
+    $note = '';
 
     if ($method == 'submit') {
         $quotxt = htmlspecialchars(trim($_POST["rash_quote"]));
+        $note = htmlspecialchars(trim($_POST["rash_note"]));
         if (strlen($quotxt) < $CONFIG['min_quote_length']) {
             $TEMPLATE->add_message(lang('add_quote_short'));
         } else {
             if (isset($_POST['preview'])) {
-                $innerhtml = $TEMPLATE->add_quote_preview(mangle_quote_text($quotxt));
+                $innerhtml = $TEMPLATE->add_quote_preview(mangle_quote_text($quotxt),mangle_quote_text($note));
             } else {
                 $innerhtml = handle_captcha('add_quote', 'add_quote_do_inner');
                 $added = 1;
@@ -881,7 +895,7 @@ function add_quote($method)
         }
     }
 
-    print $TEMPLATE->add_quote_page($quotxt, $innerhtml, $added);
+    print $TEMPLATE->add_quote_page($quotxt, $innerhtml, $added, $note);
 }
 
 

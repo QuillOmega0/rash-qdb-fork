@@ -163,27 +163,33 @@ abstract class BaseTemplate
         return $str;
     }
 
-    function add_quote_preview($quotetxt)
+    function add_quote_preview($quotetxt,$note)
     {
         $str = '<div id="add_outputmsg">';
         $str .= '<div id="addw_outputmsg_top">' . lang('preview_outputmsg_top') . '</div>';
         $str .= '<div id="add_outputmsg_quote">' . $quotetxt . '</div>';
+        if($note != ''){
+            $str .= '<div id="add_outputmsg_note">Note: ' . $note . '</div><br />';
+        }
         $str .= '<div id="add_outputmsg_bottom">' . lang('preview_outputmsg_bottom') . '</div>';
         $str .= '</div>';
         return $str;
     }
 
-    function add_quote_outputmsg($quotetxt)
+    function add_quote_outputmsg($quotetxt,$note)
     {
         $str = '<div id="add_outputmsg">';
         $str .= '<div id="add_outputmsg_top">' . lang('add_outputmsg_top') . '</div>';
         $str .= '<div id="add_outputmsg_quote">' . $quotetxt . '</div>';
+        if($note != ''){
+            $str .= '<div id="add_outputmsg_note">Note: ' . $note . '</div><br />';
+        }
         $str .= '<div id="add_outputmsg_bottom">' . lang('add_outputmsg_bottom') . '</div>';
         $str .= '</div>';
         return $str;
     }
 
-    function add_quote_page($quotetxt = '', $added_quote_html = '', $wasadded = null)
+    function add_quote_page($quotetxt = '', $added_quote_html = '', $wasadded = null, $note = '')
     {
         global $CAPTCHA;
         $str = '<div id="add_all">';
@@ -191,9 +197,9 @@ abstract class BaseTemplate
         $str .= '<h1 id="add_title">' . lang('add_title') . '</h1>';
 
         $str .= $added_quote_html;
-
         $str .= '<form action="?' . urlargs('add', 'submit') . '" method="post">
         <textarea cols="80" rows="5" name="rash_quote" id="add_quote">' . ($wasadded ? '' : $quotetxt) . '</textarea><br />';
+        $str .= 'Note: <textarea cols="80" rows="1" name="rash_note" id="add_note">' . ($wasadded ? '' : $note) . '</textarea><br />';
         $str .= $CAPTCHA->get_CAPTCHA('add_quote');
         $str .= '
         <input type="submit" value="' . lang('preview_quote_btn') . '" id="add_preview" name="preview" />
@@ -206,12 +212,15 @@ abstract class BaseTemplate
     }
 
 
-    function edit_quote_outputmsg($quotetxt)
+    function edit_quote_outputmsg($quotetxt, $notetxt = '')
     {
         $str = '<div id="editquote_outputmsg">';
 
         $str .= '<div id="editquote_outputmsg_top">' . lang('editquote_outputmsg_top') . '</div>';
         $str .= '<div id="editquote_outputmsg_quote">' . $quotetxt . '</div>';
+        if($notetxt != ''){
+            $str .= '<div id="editquote_outputmsg_note">Note: ' . $notetxt . '</div>';
+        }
         $str .= '<div id="editquote_outputmsg_bottom">' . lang('editquote_outputmsg_bottom') . '</div>';
 
         $str .= '</div>';
@@ -223,7 +232,7 @@ abstract class BaseTemplate
         return '<a href="?' . urlargs('edit', 'edit', $quoteid) . '" class="quote_edit" title="' . lang('editquote') . '">[E]</a>';
     }
 
-    function edit_quote_page($quoteid, $quotetxt, $edited_quote_html = '')
+    function edit_quote_page($quoteid, $quotetxt, $edited_quote_html = '', $quotenote = '')
     {
         $str = '<div id="editquote_all">';
 
@@ -233,6 +242,7 @@ abstract class BaseTemplate
 
         $str .= '<form action="?' . urlargs('edit', 'submit', $quoteid) . '" method="post">
         <textarea cols="80" rows="5" name="rash_quote" id="edit_quote">' . $quotetxt . '</textarea><br />
+        Note: <textarea cols="80" rows="1" name="rash_note" id="edit_note"> ' . $quotenote . '</textarea><br />
         <input type="submit" value="' . lang('edit_quote_btn') . '" id="edit_submit" />
         <input type="reset" value="' . lang('edit_reset_btn') . '" id="edit_reset" />
         </form>';
@@ -280,9 +290,9 @@ abstract class BaseTemplate
         return $str;
     }
 
-    function flag_queue_page_iter($quoteid, $quotetxt)
+    function flag_queue_page_iter($quoteid, $quotetxt, $notetext = '')
     {
-        return '<tr>
+        /*return '<tr>
 <td class="quote_delete">
 	<label>' . lang('flag_quote_delete') . '<input type="radio" name="q' . $quoteid . '" value="d' . $quoteid . '"></label>
 </td>
@@ -294,7 +304,25 @@ abstract class BaseTemplate
 <td class="quote_unflag">
 	<label><input type="radio" name="q' . $quoteid . '" value="u' . $quoteid . '">' . lang('flag_quote_unflag') . '</label>
 </td>
+</tr>';*/
+        $str = '<tr>
+<td class="quote_delete">
+	<label>' . lang('flag_quote_delete') . '<input type="radio" name="q' . $quoteid . '" value="d' . $quoteid . '"></label>
+</td>
+<td>
+<div class="quote_quote">' . $quotetxt . '
+
+</div>';
+        if($notetext != '') {
+            $str .= '<div class="quote_note">Note: ' . $notetext . '
+            </div>';
+        }
+$str .= '</td>
+<td class="quote_unflag">
+	<label><input type="radio" name="q' . $quoteid . '" value="u' . $quoteid . '">' . lang('flag_quote_unflag') . '</label>
+</td>
 </tr>';
+        return $str;
     }
 
     function flag_queue_page($inner_html)
@@ -460,22 +488,29 @@ abstract class BaseTemplate
     </form></div>';
     }
 
-    function quote_queue_page_iter($quoteid, $quotetxt)
+    function quote_queue_page_iter($quoteid, $quotetxt, $note)
     {
-        return '     <tr>
+        $str =
+            '     <tr>
       <td class="quote_no">
        <label>' . lang('quote_queue_no') . '<input type="radio" name="q' . $quoteid . '" value="n' . $quoteid . '"></label>
       </td>
       <td>' . $this->edit_quote_button($quoteid) . '
         <div class="quote_quote">
 		' . $quotetxt . '
-        </div>
-      </td>
+        </div>';
+        if($note != ''){
+            $str .= '<div class="quote_note"> Note:
+            ' . $note . '
+            </div>';
+        }
+        $str .= '      </td>
 	  <td class="quote_yes">
        <label><input type="radio" name="q' . $quoteid . '" value="y' . $quoteid . '" style="text-align: right">' . lang('quote_queue_yes') . '</label>
 	  </td>
      </tr>
 ';
+        return $str;
 
     }
 
@@ -537,7 +572,7 @@ document.write(\'<a href="javascript:ajax_vote(' . $quoteid . ',-1);" ' . $s . '
         return '<span class="quote_flag" title="' . lang('quote_already_flagged') . '">X</span>';
     }
 
-    function quote_iter($quoteid, $rating, $quotetxt, $canflag, $canvote, $date = null)
+    function quote_iter($quoteid, $rating, $quotetxt, $canflag, $canvote, $date = null, $quotenote = '')
     {
         $str = '<div class="quote_whole" id="q' . $quoteid . '">
     <div class="quote_option-bar">
@@ -556,9 +591,17 @@ document.write(\'<a href="javascript:ajax_vote(' . $quoteid . ',-1);" ' . $s . '
     </div>
     <div class="quote_quote">
      ' . $quotetxt . '
-    </div>
+    </div> ';
+            if($quotenote !=''){
+                    $str .= '
+                <div class="quote_note">
+                Note: ' . $quotenote . '
+                </div>';
+            }
+        $str .= '
    </div>
-';
+'
+        ;
         return $str;
     }
 
@@ -573,7 +616,7 @@ document.write(\'<a href="javascript:ajax_vote(' . $quoteid . ',-1);" ' . $s . '
         return $str;
     }
 
-    function flag_page($quoteid, $quotetxt, $flag)
+    function flag_page($quoteid, $quotetxt, $flag, $notetext = '')
     {
         global $CAPTCHA;
 
@@ -586,6 +629,9 @@ document.write(\'<a href="javascript:ajax_vote(' . $quoteid . ',-1);" ' . $s . '
             $str .= '<p>' . lang('flag_quote_explanation');
 
         $str .= '<div class="quote_quote">' . $quotetxt . '</div>';
+        if($notetext != '') {
+            $str .= '<div class="quote_note">' . $notetext . '</div>';
+        }
 
         if ($flag == 0) {
             $str .= '<form action="?' . urlargs('flag', $quoteid, 'verdict') . '" method="post">';

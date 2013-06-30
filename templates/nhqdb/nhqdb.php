@@ -99,7 +99,7 @@ function main_page($news)
 
 
 
-function add_quote_page($quotetxt='', $added_quote_html='', $wasadded=null)
+function add_quote_page($quotetxt='', $added_quote_html='', $wasadded=null, $note='')
 {
     global $CAPTCHA;
     $str = '<div id="add_all">';
@@ -112,6 +112,7 @@ function add_quote_page($quotetxt='', $added_quote_html='', $wasadded=null)
 
     $str .= '<form action="?'.urlargs('add','submit').'" method="post">
      <textarea cols="80" rows="5" name="rash_quote" id="add_quote" '.$this->resizehooks.'>'.($wasadded ? '' : $quotetxt).'</textarea><br />';
+    $str .= 'Note\Context: <textarea cols="80" rows="1" name="rash_note" id="add_note" '.$this->resizehooks.'>' . ($wasadded ? '' : $note) . '</textarea><br />';
     $str .= $CAPTCHA->get_CAPTCHA('add_quote');
     $str .= '
         <input type="submit" value="'.lang('preview_quote_btn').'" id="add_preview" name="preview" />
@@ -127,7 +128,7 @@ function add_quote_page($quotetxt='', $added_quote_html='', $wasadded=null)
 
 
 
-function edit_quote_page($quoteid, $quotetxt, $edited_quote_html='')
+function edit_quote_page($quoteid, $quotetxt, $edited_quote_html='', $quotenote = '')
 {
     $str = '<div id="editquote_all">';
 
@@ -139,6 +140,8 @@ function edit_quote_page($quoteid, $quotetxt, $edited_quote_html='')
 
     $str .= '<form action="?'.urlargs('edit','submit', $quoteid).'" method="post">
      <textarea cols="80" rows="5" name="rash_quote" id="edit_quote" '.$this->resizehooks.'>'.$quotetxt.'</textarea><br />
+    Note: <textarea cols="80" rows="1" name="rash_note" id="edit_note" '. $this->resizehooks.'>'.$quotenote . '</textarea><br />
+
      <input type="submit" value="'.lang('edit_quote_btn').'" id="edit_submit" />
      <input type="reset" value="'.lang('edit_reset_btn').'" id="edit_reset" />
     </form>';
@@ -354,7 +357,7 @@ function quote_queue_page($innerhtml)
 }
 
 
-function quote_iter($quoteid, $rating, $quotetxt, $canflag, $canvote, $date=null)
+function quote_iter($quoteid, $rating, $quotetxt, $canflag, $canvote, $date=null, $quotenote = '')
 {
     $str = '<div class="quote_whole" id="q'.$quoteid.'">
     <div class="quote_separator">&nbsp;</div>
@@ -374,7 +377,16 @@ function quote_iter($quoteid, $rating, $quotetxt, $canflag, $canvote, $date=null
     </div>
     <div class="quote_quote">
      '.$quotetxt.'
-    </div>
+    </div>';
+
+    if($quotenote != ''){
+        $str .= '
+        <div class="quote_note">
+        Note: ' . $quotenote . '
+        </div>';
+    }
+
+    $str .= '
    </div>
 ';
     return $str;
