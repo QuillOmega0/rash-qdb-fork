@@ -27,10 +27,10 @@ header('Content-type: text/html; charset=utf-8');
  <div id="site_all">
   <div id="site_nav">
    <div id="site_nav_upper">
-      <div id="site_nav_upper_qms-long"><?=$topright?>
-    </div>
-      <div id="site_nav_upper_qms"><?=$topleft?>
-    </div>&nbsp;
+      <span id="site_nav_upper_qms-long"><?=$topright?>
+    </span>
+      <span id="site_nav_upper_qms"><?=$topleft?>
+    </span>&nbsp;
 <?php
 
   if(!isset($_SESSION['logged_in'])){

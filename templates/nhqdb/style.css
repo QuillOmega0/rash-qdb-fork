@@ -204,15 +204,14 @@ div#site_nav_upper{
 	background-color: #0099d7;
 	padding: 3px;
 }
-div#site_nav_upper_qms{
+span#site_nav_upper_qms{
 	position: relative;
 	z-index: 1;
-	float: left;
 	font-size: 14pt;
 	font-weight: bold;
 	font-style: italic;
 }
-div#site_nav_upper_qms-long{
+span#site_nav_upper_qms-long{
 	position: relative;
 	z-index: 1;
 	float: right;
